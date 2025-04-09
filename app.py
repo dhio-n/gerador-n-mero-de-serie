@@ -28,10 +28,7 @@ def tela_login():
     if "logado" not in st.session_state:
         st.session_state.logado = False
 
-    if "login_solicitado" not in st.session_state:
-        st.session_state.login_solicitado = False
-
-    if not st.session_state.logado and not st.session_state.login_solicitado:
+    if not st.session_state.logado:
         st.subheader("🔐 Login")
         usuario = st.text_input("Usuário")
         senha = st.text_input("Senha", type="password")
@@ -40,16 +37,10 @@ def tela_login():
             if verificar_login(usuario, senha):
                 st.session_state.logado = True
                 st.session_state.usuario = usuario
-                st.session_state.login_solicitado = True
-                st.success("✅ Login bem-sucedido!")
+                st.session_state.rerun = True  # flag para forçar rerun
             else:
                 st.error("❌ Usuário ou senha incorretos.")
-
-    elif st.session_state.login_solicitado:
-        st.session_state.login_solicitado = False
-        st.experimental_rerun()
-
-    elif st.session_state.logado:
+    else:
         st.sidebar.success(f"👤 Usuário: {st.session_state.usuario}")
 
 # =========================
@@ -73,17 +64,14 @@ if not st.session_state.logado:
 # INTERFACE PRINCIPAL
 # =========================
 
-st.set_page_config(page_title="Gerador de Números de Série", layout="centered")
-
-st.title("Gerador de Números de Série - Centro de Distribuição")
-
 st.sidebar.markdown(f"👤 Logado como: **{st.session_state.usuario}**")
 logout = st.sidebar.button("Logout")
 
 if logout:
     st.session_state.logado = False
     st.session_state.usuario = ""
-    st.experimental_rerun()
+    st.session_state.rerun = True  # define a flag para rerun seguro
+
 
 
 opcao = st.sidebar.selectbox("Escolha a operação:", ["Gerar Série", "Consultar Série", "Cadastrar Produto"])
