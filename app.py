@@ -90,8 +90,11 @@ elif opcao == "Consultar Série":
 
             st.markdown(f"📄 Mostrando página **{pagina}** de **{total_paginas}**")
 
-            for idx, (numero_serie, data_geracao) in enumerate(series_pagina):
+            for idx, serie in enumerate(series_pagina):
+                numero_serie = serie["numero_serie"]
+                data_geracao = serie["data_geracao"]
                 unique_id = f"{codigo}_{numero_serie}_{idx}"
+
                 col1, col2, col3 = st.columns([3, 1, 1])
 
                 with col1:
