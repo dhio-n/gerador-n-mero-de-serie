@@ -4,20 +4,76 @@ from serial_generator import gerar_numero_serie
 from etiqueta import gerar_etiqueta_pdf
 from datetime import datetime, time
 import os
+import bcrypt
 
-# Configuração da página
+# =========================
+# FUNÇÕES DE AUTENTICAÇÃO
+# =========================
+def verificar_login(usuario, senha):
+    conn = conectar()
+    cursor = conn.cursor()
+    cursor.execute("SELECT senha FROM usuarios WHERE usuario = %s", (usuario,))
+    resultado = cursor.fetchone()
+    conn.close()
+
+    if resultado:
+        senha_hash = resultado["senha"]
+        return bcrypt.checkpw(senha.encode(), senha_hash.encode())
+    return False
+
+# =========================
+# TELA DE LOGIN
+# =========================
+def tela_login():
+    st.title("🔒 Login - Centro de Distribuição")
+
+    usuario = st.text_input("Usuário")
+    senha = st.text_input("Senha", type="password")
+
+    if st.button("Entrar"):
+        if verificar_login(usuario, senha):
+            st.session_state.logado = True
+            st.session_state.usuario = usuario
+            st.success("✅ Login realizado com sucesso!")
+            st.experimental_rerun()
+        else:
+            st.error("❌ Usuário ou senha inválidos")
+
+# =========================
+# INICIALIZA ESTADO DE SESSÃO
+# =========================
+if "logado" not in st.session_state:
+    st.session_state.logado = False
+if "usuario" not in st.session_state:
+    st.session_state.usuario = ""
+
+# =========================
+# SE NÃO LOGADO, MOSTRA TELA DE LOGIN
+# =========================
+if not st.session_state.logado:
+    tela_login()
+    st.stop()
+
+# =========================
+# INTERFACE PRINCIPAL
+# =========================
+
 st.set_page_config(page_title="Gerador de Números de Série", layout="centered")
 
 st.title("Gerador de Números de Série - Centro de Distribuição")
 
-# Menu lateral de navegação
+with st.sidebar:
+    st.markdown(f"👤 Logado como: **{st.session_state.usuario}**")
+    if st.button("Logout"):
+        st.session_state.logado = False
+        st.session_state.usuario = ""
+        st.experimental_rerun()
+
 opcao = st.sidebar.selectbox("Escolha a operação:", ["Gerar Série", "Consultar Série", "Cadastrar Produto"])
 
-# Inicializa estado da sessão para reimpressão
 if "reimprimir_serie" not in st.session_state:
     st.session_state.reimprimir_serie = None
 
-# ----------- Cadastrar Produto -----------
 if opcao == "Cadastrar Produto":
     st.subheader("Cadastro de Produto")
     codigo = st.text_input("Código do Produto")
@@ -31,12 +87,11 @@ if opcao == "Cadastrar Produto":
         else:
             st.warning("Preencha ao menos o código e nome do produto.")
 
-# ----------- Gerar Série -----------
 elif opcao == "Gerar Série":
     st.subheader("Gerar Número de Série")
     codigo = st.text_input("Digite o Código do Produto")
     quantidade = st.number_input("Quantidade de Números de Série", min_value=1, step=1, value=1)
-    tamanho = "Grande"  # Pode ser customizado depois se quiser tamanhos diferentes
+    tamanho = "Grande"
 
     if st.button("Gerar Série"):
         produto = buscar_produto(codigo)
@@ -61,7 +116,6 @@ elif opcao == "Gerar Série":
         else:
             st.warning("⚠️ Produto não encontrado. Cadastre-o primeiro.")
 
-# ----------- Consultar Série -----------
 elif opcao == "Consultar Série":
     st.subheader("Consulta de Números de Série")
 
@@ -117,6 +171,5 @@ elif opcao == "Consultar Série":
                                     mime="application/pdf",
                                     key=f"download_{unique_id}"
                                 )
-
         else:
             st.warning("❌ Nenhum número de série encontrado para os critérios.")
