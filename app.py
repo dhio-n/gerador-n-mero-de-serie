@@ -88,6 +88,9 @@ def tela_gerar_serie():
     quantidade = st.number_input("Quantidade de Números de Série", min_value=1, step=1, value=1)
     tamanho = "Grande"
 
+    if "arquivos_pdf" not in st.session_state:
+        st.session_state.arquivos_pdf = []
+
     if st.button("Gerar Série"):
         produto = buscar_produto(codigo)
         if produto:
@@ -99,17 +102,21 @@ def tela_gerar_serie():
                 series_geradas.append(numero_serie)
 
             arquivos = gerar_etiqueta_pdf(produto, series_geradas, tamanho)
-            for arquivo in arquivos:
-                with open(arquivo, "rb") as file:
-                    st.download_button(
-                        label=f"📥 Baixar {os.path.basename(arquivo)}",
-                        data=file,
-                        file_name=os.path.basename(arquivo),
-                        mime="application/pdf"
-                    )
+            st.session_state.arquivos_pdf = arquivos  # <- guarda os arquivos no session_state
             st.success(f"{quantidade} número(s) de série gerado(s) com sucesso!")
         else:
             st.warning("⚠️ Produto não encontrado. Cadastre-o primeiro.")
+
+    # Exibe botões de download mesmo após o botão ser clicado
+    if st.session_state.arquivos_pdf:
+        for arquivo in st.session_state.arquivos_pdf:
+            with open(arquivo, "rb") as file:
+                st.download_button(
+                    label=f"📥 Baixar {os.path.basename(arquivo)}",
+                    data=file,
+                    file_name=os.path.basename(arquivo),
+                    mime="application/pdf"
+                )
 
 # =========================
 # TELA DE CONSULTA DE SÉRIES
