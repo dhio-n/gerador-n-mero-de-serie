@@ -24,6 +24,11 @@ def verificar_login(usuario, senha):
 # =========================
 # TELA DE LOGIN
 # =========================
+# ... código anterior inalterado ...
+
+# =========================
+# TELA DE LOGIN
+# =========================
 def tela_login():
     caminho_logo = os.path.join(os.path.dirname(__file__), "LOGO2.png")
     encoded_logo = None
@@ -58,7 +63,7 @@ def tela_login():
             unsafe_allow_html=True
         )
 
-    st.subheader("🔐 Gerador de número de serie - Mundial Refrigeração - Login")
+    st.subheader("🔐 Gerador de número de série - Mundial Refrigeração - Login")
     usuario = st.text_input("Usuário", key="login_usuario")
     senha = st.text_input("Senha", type="password", key="login_senha")
 
@@ -67,8 +72,12 @@ def tela_login():
             st.session_state.logado = True
             st.session_state.usuario = usuario
             st.success("✅ Login realizado com sucesso!")
+            st.rerun()  # <- aqui é a mágica para não precisar clicar de novo
         else:
             st.error("❌ Usuário ou senha incorretos.")
+
+# ... o restante do seu código permanece igual ...
+
 
 # =========================
 # INICIALIZA ESTADO DE SESSÃO
