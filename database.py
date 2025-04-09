@@ -3,12 +3,22 @@ from psycopg2.extras import RealDictCursor
 from datetime import datetime
 import os
 
-# Pega a URL do banco via variável de ambiente (deve estar no formato PostgreSQL)
-SUPABASE_URL = os.environ["SUPABASE_URL"]
 
-# Função de conexão com cursor que retorna dicionários
+
 def conectar():
-    return psycopg2.connect(SUPABASE_URL, cursor_factory=RealDictCursor)
+    try:
+        conn = psycopg2.connect(
+            user="postgres.qsqajbcsbuezstvnaofj",
+            password=os.environ["SENHA"],
+            host="aws-0-sa-east-1.pooler.supabase.com",
+            port="6543",
+            dbname="postgres",
+            cursor_factory=RealDictCursor
+        )
+        return conn
+    except Exception as e:
+        print("Erro ao conectar ao banco de dados:", e)
+        raise
 
 # Busca produto pelo código
 def buscar_produto(codigo):
