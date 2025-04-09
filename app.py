@@ -95,7 +95,7 @@ elif opcao == "Consultar Série":
                 col1, col2, col3 = st.columns([3, 1, 1])
 
                 with col1:
-                    st.write(f"📦 Nº Série: `{numero_serie}`\n\n🕒 Gerado em: {data_geracao}")
+                    st.write(f"📦 Nº Série: {numero_serie}\n\n🕒 Gerado em: {data_geracao}")
 
                 with col2:
                     if st.button("Reimprimir", key=f"reimprimir_{unique_id}"):
