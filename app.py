@@ -5,10 +5,6 @@ from etiqueta import gerar_etiqueta_pdf
 from datetime import datetime, time
 import os
 
-# ⚠️ Removido criar_tabelas(), pois com Supabase você não cria tabelas via app
-# criar_tabelas()  ← Desnecessário com Supabase
-
-
 # Configuração da página
 st.set_page_config(page_title="Gerador de Números de Série", layout="centered")
 
@@ -75,7 +71,6 @@ elif opcao == "Consultar Série":
     numero_serie_input = st.text_input("Buscar por Número de Série")
     pagina = st.number_input("Página", min_value=1, step=1, value=1)
 
-    # Pode acionar consulta com botão ou preenchendo o código
     if st.button("Consultar") or codigo:
         filtros = {}
         if data_inicio:
@@ -97,11 +92,15 @@ elif opcao == "Consultar Série":
 
             for numero_serie, data_geracao in series_pagina:
                 col1, col2, col3 = st.columns([3, 1, 1])
+
                 with col1:
                     st.write(f"📦 Nº Série: `{numero_serie}`\n\n🕒 Gerado em: {data_geracao}")
+
                 with col2:
-                    if st.button("Reimprimir", key=f"reimprimir_{numero_serie}"):
+                    botao_key = f"reimprimir_{codigo}_{numero_serie}"
+                    if st.button("Reimprimir", key=botao_key):
                         st.session_state.reimprimir_serie = (codigo, numero_serie)
+
                 with col3:
                     if st.session_state.reimprimir_serie == (codigo, numero_serie):
                         produto = buscar_produto(codigo)
@@ -113,7 +112,7 @@ elif opcao == "Consultar Série":
                                     data=file,
                                     file_name=os.path.basename(caminho),
                                     mime="application/pdf",
-                                    key=f"download_{numero_serie}"
+                                    key=f"download_{codigo}_{numero_serie}"
                                 )
         else:
             st.warning("❌ Nenhum número de série encontrado para os critérios.")
