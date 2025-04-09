@@ -6,11 +6,12 @@ from barcode.writer import ImageWriter
 from database import buscar_produto
 import shutil
 
-# Garante que a logo seja copiada para a pasta temporária (/tmp) ao rodar no Streamlit Cloud
+# Pasta temporária
 PASTA_TEMP = "/tmp"
 ORIGEM_LOGO = "LOGO.png"
 DESTINO_LOGO = os.path.join(PASTA_TEMP, "LOGO.png")
 
+# Garante que a logo seja copiada para a pasta temporária
 if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
     shutil.copyfile(ORIGEM_LOGO, DESTINO_LOGO)
 
@@ -28,9 +29,15 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Grande'):
     }
 
     largura, altura = tamanho_map.get(tamanho, (100, 70))
-    
+
     nome_produto = produto["nome"]
     codigo_produto = produto["codigo"]
+
+    # Garante que a lista tenha dicionários com chave "numero_serie"
+    lista_series = [
+        {"numero_serie": s} if isinstance(s, str) else s
+        for s in lista_series
+    ]
 
     total_series = len(lista_series)
     etiquetas_por_pagina = 5
@@ -49,7 +56,6 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Grande'):
 
             numero_serie = lista_series[index]["numero_serie"]
             pdf.add_page()
-
             y = 4  # margem superior
 
             # Logo
