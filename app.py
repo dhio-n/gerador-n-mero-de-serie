@@ -77,13 +77,14 @@ st.set_page_config(page_title="Gerador de Números de Série", layout="centered"
 
 st.title("Gerador de Números de Série - Centro de Distribuição")
 
-with st.sidebar:
-    st.markdown(f"👤 Logado como: **{st.session_state.usuario}**")
-    if st.button("Logout"):
-        for chave in ["logado", "usuario", "login_solicitado"]:
-            if chave in st.session_state:
-                del st.session_state[chave]
-        st.experimental_rerun()
+st.sidebar.markdown(f"👤 Logado como: **{st.session_state.usuario}**")
+logout = st.sidebar.button("Logout")
+
+if logout:
+    st.session_state.logado = False
+    st.session_state.usuario = ""
+    st.experimental_rerun()
+
 
 opcao = st.sidebar.selectbox("Escolha a operação:", ["Gerar Série", "Consultar Série", "Cadastrar Produto"])
 
