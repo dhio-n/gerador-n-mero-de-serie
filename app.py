@@ -25,6 +25,39 @@ def verificar_login(usuario, senha):
 # TELA DE LOGIN
 # =========================
 def tela_login():
+    caminho_logo = os.path.join(os.path.dirname(__file__), "logo2.png")
+    encoded_logo = None
+
+    # Carrega a imagem como base64
+    if os.path.exists(caminho_logo):
+        import base64
+        with open(caminho_logo, "rb") as image_file:
+            encoded_logo = base64.b64encode(image_file.read()).decode()
+
+    # Aplica o fundo se a imagem foi carregada
+    if encoded_logo:
+        st.markdown(
+            f"""
+            <style>
+            .stApp {{
+                background-image: url("data:image/png;base64,{encoded_logo}");
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            }}
+            .block-container {{
+                background-color: rgba(255, 255, 255, 0.85);
+                padding: 2rem;
+                border-radius: 10px;
+                max-width: 400px;
+                margin: auto;
+                margin-top: 100px;
+            }}
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
     st.subheader("🔐 Login")
     usuario = st.text_input("Usuário", key="login_usuario")
     senha = st.text_input("Senha", type="password", key="login_senha")
