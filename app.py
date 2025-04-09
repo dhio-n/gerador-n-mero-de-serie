@@ -114,5 +114,6 @@ elif opcao == "Consultar Série":
                                     mime="application/pdf",
                                     key=f"download_{unique_id}"
                                 )
+
         else:
             st.warning("❌ Nenhum número de série encontrado para os critérios.")
