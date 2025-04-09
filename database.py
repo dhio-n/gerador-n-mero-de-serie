@@ -1,39 +1,17 @@
-import sqlite3
+import psycopg2
+from psycopg2.extras import RealDictCursor
 from datetime import datetime
 import os
 
-
+# Substitua pela sua URL do Supabase (deixe a senha segura em variável de ambiente)
+SUPABASE_URL = os.environ["SUPABASE_URL"]
 def conectar():
-    caminho_db = os.path.join("/tmp", "produtos.db")  # Usando /tmp
-    return sqlite3.connect(caminho_db)
-
-def criar_tabelas():
-    conn = conectar()
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS produtos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            codigo TEXT UNIQUE,
-            nome TEXT,
-            descricao TEXT
-        )
-    """)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS series (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            codigo_produto TEXT,
-            numero_serie TEXT UNIQUE,
-            data_geracao TEXT,
-            FOREIGN KEY (codigo_produto) REFERENCES produtos(codigo)
-        )
-    """)
-    conn.commit()
-    conn.close()
+    return psycopg2.connect(SUPABASE_URL, cursor_factory=RealDictCursor)
 
 def buscar_produto(codigo):
     conn = conectar()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM produtos WHERE codigo = ?", (codigo,))
+    cursor.execute("SELECT * FROM produtos WHERE codigo = %s", (codigo,))
     produto = cursor.fetchone()
     conn.close()
     return produto
@@ -41,14 +19,14 @@ def buscar_produto(codigo):
 def cadastrar_produto(codigo, nome, descricao):
     conn = conectar()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO produtos (codigo, nome, descricao) VALUES (?, ?, ?)", (codigo, nome, descricao))
+    cursor.execute("INSERT INTO produtos (codigo, nome, descricao) VALUES (%s, %s, %s)", (codigo, nome, descricao))
     conn.commit()
     conn.close()
 
 def salvar_serie(codigo_produto, numero_serie, data_geracao):
     conn = conectar()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO series (codigo_produto, numero_serie, data_geracao) VALUES (?, ?, ?)", 
+    cursor.execute("INSERT INTO series (codigo_produto, numero_serie, data_geracao) VALUES (%s, %s, %s)", 
                    (codigo_produto, numero_serie, data_geracao))
     conn.commit()
     conn.close()
@@ -57,19 +35,19 @@ def consultar_series(codigo_produto, data_inicio=None, data_fim=None, numero_ser
     conn = conectar()
     cursor = conn.cursor()
 
-    query = "SELECT numero_serie, data_geracao FROM series WHERE codigo_produto = ?"
+    query = "SELECT numero_serie, data_geracao FROM series WHERE codigo_produto = %s"
     params = [codigo_produto]
 
     if data_inicio:
-        query += " AND data_geracao >= ?"
+        query += " AND data_geracao >= %s"
         params.append(data_inicio)
 
     if data_fim:
-        query += " AND data_geracao <= ?"
+        query += " AND data_geracao <= %s"
         params.append(data_fim)
 
     if numero_serie:
-        query += " AND numero_serie LIKE ?"
+        query += " AND numero_serie ILIKE %s"
         params.append(f"%{numero_serie}%")
 
     query += " ORDER BY data_geracao DESC"
