@@ -2,6 +2,7 @@ import sqlite3
 from datetime import datetime
 
 def conectar():
+    os.makedirs("data", exist_ok=True)  # Garante que a pasta existe
     return sqlite3.connect("data/produtos.db")
 
 def criar_tabelas():
