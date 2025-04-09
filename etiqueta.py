@@ -14,9 +14,6 @@ DESTINO_LOGO = os.path.join(PASTA_TEMP, "LOGO.png")
 # Copia a logo se ainda não estiver na pasta temporária
 if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
     shutil.copyfile(ORIGEM_LOGO, DESTINO_LOGO)
-    
-# Caminho temporário padrão para uso na nuvem
-PASTA_TEMP = "/tmp"
 
 def gerar_codigo_barras(numero_serie):
     caminho_base = os.path.join(PASTA_TEMP, f"barcode_{numero_serie}")
@@ -32,8 +29,8 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Grande'):
     }
 
     largura, altura = tamanho_map.get(tamanho, (100, 70))
-    nome_produto = produto[2]
-    codigo_produto = produto[1]
+    nome_produto = produto["nome"]
+    codigo_produto = produto["codigo"]
 
     total_series = len(lista_series)
     etiquetas_por_pagina = 5
@@ -102,8 +99,8 @@ def reimprimir_etiqueta_individual(codigo_produto, numero_serie, tamanho='Grande
     if not produto:
         raise ValueError("Produto não encontrado.")
 
-    nome_produto = produto[2]
-    codigo_produto = produto[1]
+    nome_produto = produto["nome"]
+    codigo_produto = produto["codigo"]
 
     pdf = FPDF('P', 'mm', (largura, altura))
     pdf.set_auto_page_break(auto=False)
