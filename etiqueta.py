@@ -4,7 +4,17 @@ import math
 from barcode import Code128
 from barcode.writer import ImageWriter
 from database import buscar_produto
+import shutil
 
+# Garante que a logo seja copiada para a pasta temporária (/tmp) ao rodar no Streamlit Cloud
+PASTA_TEMP = "/tmp"
+ORIGEM_LOGO = "LOGO.png"
+DESTINO_LOGO = os.path.join(PASTA_TEMP, "LOGO.png")
+
+# Copia a logo se ainda não estiver na pasta temporária
+if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
+    shutil.copyfile(ORIGEM_LOGO, DESTINO_LOGO)
+    
 # Caminho temporário padrão para uso na nuvem
 PASTA_TEMP = "/tmp"
 
