@@ -5,32 +5,41 @@ from etiqueta import gerar_etiqueta_pdf
 from datetime import datetime, time
 import os
 
-criar_tabelas()
+# ⚠️ Removido criar_tabelas(), pois com Supabase você não cria tabelas via app
+# criar_tabelas()  ← Desnecessário com Supabase
 
+# Configuração da página
 st.set_page_config(page_title="Gerador de Números de Série", layout="centered")
 
 st.title("Gerador de Números de Série - Centro de Distribuição")
 
+# Menu lateral de navegação
 opcao = st.sidebar.selectbox("Escolha a operação:", ["Gerar Série", "Consultar Série", "Cadastrar Produto"])
 
-# Inicializa o estado de reimpressão
+# Inicializa estado da sessão para reimpressão
 if "reimprimir_serie" not in st.session_state:
     st.session_state.reimprimir_serie = None
 
+# ----------- Cadastrar Produto -----------
 if opcao == "Cadastrar Produto":
     st.subheader("Cadastro de Produto")
     codigo = st.text_input("Código do Produto")
     nome = st.text_input("Nome do Produto")
     descricao = st.text_area("Descrição")
-    if st.button("Cadastrar"):
-        cadastrar_produto(codigo, nome, descricao)
-        st.success("Produto cadastrado com sucesso!")
 
+    if st.button("Cadastrar"):
+        if codigo and nome:
+            cadastrar_produto(codigo, nome, descricao)
+            st.success("✅ Produto cadastrado com sucesso!")
+        else:
+            st.warning("Preencha ao menos o código e nome do produto.")
+
+# ----------- Gerar Série -----------
 elif opcao == "Gerar Série":
     st.subheader("Gerar Número de Série")
     codigo = st.text_input("Digite o Código do Produto")
     quantidade = st.number_input("Quantidade de Números de Série", min_value=1, step=1, value=1)
-    tamanho = "Grande"
+    tamanho = "Grande"  # Pode ser customizado depois se quiser tamanhos diferentes
 
     if st.button("Gerar Série"):
         produto = buscar_produto(codigo)
@@ -51,23 +60,21 @@ elif opcao == "Gerar Série":
                         file_name=os.path.basename(arquivo),
                         mime="application/pdf"
                     )
-
             st.success(f"{quantidade} número(s) de série gerado(s) com sucesso!")
         else:
-            st.warning("Produto não encontrado. Cadastre-o primeiro.")
+            st.warning("⚠️ Produto não encontrado. Cadastre-o primeiro.")
 
+# ----------- Consultar Série -----------
 elif opcao == "Consultar Série":
     st.subheader("Consulta de Números de Série")
 
-    if "reimprimir_serie" not in st.session_state:
-        st.session_state.reimprimir_serie = None
-
     codigo = st.text_input("Código do Produto")
-    data_inicio = st.date_input("Data Inicial", value=None)
-    data_fim = st.date_input("Data Final", value=None)
+    data_inicio = st.date_input("Data Inicial")
+    data_fim = st.date_input("Data Final")
     numero_serie_input = st.text_input("Buscar por Número de Série")
     pagina = st.number_input("Página", min_value=1, step=1, value=1)
 
+    # Pode acionar consulta com botão ou preenchendo o código
     if st.button("Consultar") or codigo:
         filtros = {}
         if data_inicio:
@@ -85,12 +92,12 @@ elif opcao == "Consultar Série":
             fim = inicio + 50
             series_pagina = todas_series[inicio:fim]
 
-            st.markdown(f"Mostrando página {pagina} de {total_paginas}")
+            st.markdown(f"📄 Mostrando página **{pagina}** de **{total_paginas}**")
 
             for numero_serie, data_geracao in series_pagina:
                 col1, col2, col3 = st.columns([3, 1, 1])
                 with col1:
-                    st.write(f"📦 Nº Série: {numero_serie} - Gerado em: {data_geracao}")
+                    st.write(f"📦 Nº Série: `{numero_serie}`\n\n🕒 Gerado em: {data_geracao}")
                 with col2:
                     if st.button("Reimprimir", key=f"reimprimir_{numero_serie}"):
                         st.session_state.reimprimir_serie = (codigo, numero_serie)
@@ -108,4 +115,4 @@ elif opcao == "Consultar Série":
                                     key=f"download_{numero_serie}"
                                 )
         else:
-            st.warning("Nenhum número de série encontrado para os critérios.")
+            st.warning("❌ Nenhum número de série encontrado para os critérios.")
