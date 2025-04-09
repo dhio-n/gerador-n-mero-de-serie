@@ -25,23 +25,17 @@ def verificar_login(usuario, senha):
 # TELA DE LOGIN
 # =========================
 def tela_login():
-    if "logado" not in st.session_state:
-        st.session_state.logado = False
+    st.subheader("🔐 Login")
+    usuario = st.text_input("Usuário", key="login_usuario")
+    senha = st.text_input("Senha", type="password", key="login_senha")
 
-    if not st.session_state.logado:
-        st.subheader("🔐 Login")
-        usuario = st.text_input("Usuário")
-        senha = st.text_input("Senha", type="password")
-
-        if st.button("Entrar"):
-            if verificar_login(usuario, senha):
-                st.session_state.logado = True
-                st.session_state.usuario = usuario
-                st.session_state.rerun = True  # flag para forçar rerun
-            else:
-                st.error("❌ Usuário ou senha incorretos.")
-    else:
-        st.sidebar.success(f"👤 Usuário: {st.session_state.usuario}")
+    if st.button("Entrar"):
+        if verificar_login(usuario, senha):
+            st.session_state.logado = True
+            st.session_state.usuario = usuario
+            st.success("✅ Login realizado com sucesso!")
+        else:
+            st.error("❌ Usuário ou senha incorretos.")
 
 # =========================
 # INICIALIZA ESTADO DE SESSÃO
@@ -50,8 +44,8 @@ if "logado" not in st.session_state:
     st.session_state.logado = False
 if "usuario" not in st.session_state:
     st.session_state.usuario = ""
-if "login_solicitado" not in st.session_state:
-    st.session_state.login_solicitado = False
+if "reimprimir_serie" not in st.session_state:
+    st.session_state.reimprimir_serie = None
 
 # =========================
 # SE NÃO LOGADO, MOSTRA TELA DE LOGIN
@@ -70,14 +64,10 @@ logout = st.sidebar.button("Logout")
 if logout:
     st.session_state.logado = False
     st.session_state.usuario = ""
-    st.session_state.rerun = True  # define a flag para rerun seguro
-
-
+    st.success("✅ Logout realizado com sucesso!")
+    st.stop()
 
 opcao = st.sidebar.selectbox("Escolha a operação:", ["Gerar Série", "Consultar Série", "Cadastrar Produto"])
-
-if "reimprimir_serie" not in st.session_state:
-    st.session_state.reimprimir_serie = None
 
 if opcao == "Cadastrar Produto":
     st.subheader("Cadastro de Produto")
