@@ -29,7 +29,6 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Grande'):
     }
 
     largura, altura = tamanho_map.get(tamanho, (100, 70))
-
     nome_produto = produto["nome"]
     codigo_produto = produto["codigo"]
 
