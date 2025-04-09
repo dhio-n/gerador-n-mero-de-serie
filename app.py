@@ -90,19 +90,19 @@ elif opcao == "Consultar Série":
 
             st.markdown(f"📄 Mostrando página **{pagina}** de **{total_paginas}**")
 
-            for numero_serie, data_geracao in series_pagina:
+            for idx, (numero_serie, data_geracao) in enumerate(series_pagina):
+                unique_id = f"{codigo}_{numero_serie}_{idx}"
                 col1, col2, col3 = st.columns([3, 1, 1])
 
                 with col1:
                     st.write(f"📦 Nº Série: `{numero_serie}`\n\n🕒 Gerado em: {data_geracao}")
 
                 with col2:
-                    botao_key = f"reimprimir_{codigo}_{numero_serie}"
-                    if st.button("Reimprimir", key=botao_key):
-                        st.session_state.reimprimir_serie = (codigo, numero_serie)
+                    if st.button("Reimprimir", key=f"reimprimir_{unique_id}"):
+                        st.session_state.reimprimir_serie = (codigo, numero_serie, idx)
 
                 with col3:
-                    if st.session_state.reimprimir_serie == (codigo, numero_serie):
+                    if st.session_state.reimprimir_serie == (codigo, numero_serie, idx):
                         produto = buscar_produto(codigo)
                         if produto:
                             caminho = gerar_etiqueta_pdf(produto, [numero_serie])[0]
@@ -112,7 +112,7 @@ elif opcao == "Consultar Série":
                                     data=file,
                                     file_name=os.path.basename(caminho),
                                     mime="application/pdf",
-                                    key=f"download_{codigo}_{numero_serie}"
+                                    key=f"download_{unique_id}"
                                 )
         else:
             st.warning("❌ Nenhum número de série encontrado para os critérios.")
