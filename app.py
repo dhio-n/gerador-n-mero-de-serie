@@ -28,7 +28,10 @@ def tela_login():
     if "logado" not in st.session_state:
         st.session_state.logado = False
 
-    if not st.session_state.logado:
+    if "login_solicitado" not in st.session_state:
+        st.session_state.login_solicitado = False
+
+    if not st.session_state.logado and not st.session_state.login_solicitado:
         st.subheader("🔐 Login")
         usuario = st.text_input("Usuário")
         senha = st.text_input("Senha", type="password")
@@ -37,13 +40,17 @@ def tela_login():
             if verificar_login(usuario, senha):
                 st.session_state.logado = True
                 st.session_state.usuario = usuario
+                st.session_state.login_solicitado = True
                 st.success("✅ Login bem-sucedido!")
-                st.experimental_rerun()
             else:
                 st.error("❌ Usuário ou senha incorretos.")
-    else:
-        st.sidebar.success(f"👤 Usuário: {st.session_state.usuario}")
 
+    elif st.session_state.login_solicitado:
+        st.session_state.login_solicitado = False
+        st.experimental_rerun()
+
+    elif st.session_state.logado:
+        st.sidebar.success(f"👤 Usuário: {st.session_state.usuario}")
 
 # =========================
 # INICIALIZA ESTADO DE SESSÃO
@@ -52,6 +59,8 @@ if "logado" not in st.session_state:
     st.session_state.logado = False
 if "usuario" not in st.session_state:
     st.session_state.usuario = ""
+if "login_solicitado" not in st.session_state:
+    st.session_state.login_solicitado = False
 
 # =========================
 # SE NÃO LOGADO, MOSTRA TELA DE LOGIN
@@ -71,8 +80,9 @@ st.title("Gerador de Números de Série - Centro de Distribuição")
 with st.sidebar:
     st.markdown(f"👤 Logado como: **{st.session_state.usuario}**")
     if st.button("Logout"):
-        st.session_state.logado = False
-        st.session_state.usuario = ""
+        for chave in ["logado", "usuario", "login_solicitado"]:
+            if chave in st.session_state:
+                del st.session_state[chave]
         st.experimental_rerun()
 
 opcao = st.sidebar.selectbox("Escolha a operação:", ["Gerar Série", "Consultar Série", "Cadastrar Produto"])
