@@ -1,5 +1,7 @@
 import sqlite3
 from datetime import datetime
+import os
+
 
 def conectar():
     caminho_db = os.path.join("/tmp", "produtos.db")  # Usando /tmp
