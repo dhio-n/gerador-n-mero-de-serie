@@ -11,7 +11,6 @@ PASTA_TEMP = "/tmp"
 ORIGEM_LOGO = "LOGO.png"
 DESTINO_LOGO = os.path.join(PASTA_TEMP, "LOGO.png")
 
-# Copia a logo se ainda não estiver na pasta temporária
 if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
     shutil.copyfile(ORIGEM_LOGO, DESTINO_LOGO)
 
@@ -29,6 +28,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Grande'):
     }
 
     largura, altura = tamanho_map.get(tamanho, (100, 70))
+    
     nome_produto = produto["nome"]
     codigo_produto = produto["codigo"]
 
@@ -47,7 +47,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Grande'):
             if index >= total_series:
                 break
 
-            numero_serie = lista_series[index]
+            numero_serie = lista_series[index]["numero_serie"]
             pdf.add_page()
 
             y = 4  # margem superior
@@ -56,7 +56,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Grande'):
             logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
             if os.path.exists(logo_path):
                 pdf.image(logo_path, x=5, y=y, w=20)
-            y += 10  # espaço abaixo da logo
+            y += 10
 
             # Nome do produto
             pdf.set_xy(5, y)
