@@ -25,7 +25,7 @@ def verificar_login(usuario, senha):
 # TELA DE LOGIN
 # =========================
 def tela_login():
-    caminho_logo = os.path.join(os.path.dirname(__file__), "LOGO.png")
+    caminho_logo = os.path.join(os.path.dirname(__file__), "LOGO2.png")
     encoded_logo = None
 
     # Carrega a imagem como base64
