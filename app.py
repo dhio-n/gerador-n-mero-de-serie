@@ -58,7 +58,7 @@ def tela_login():
             unsafe_allow_html=True
         )
 
-    st.subheader("🔐 Login")
+    st.subheader("🔐 Gerador de número de serie - Mundial Refrigeração - Login")
     usuario = st.text_input("Usuário", key="login_usuario")
     senha = st.text_input("Senha", type="password", key="login_senha")
 
