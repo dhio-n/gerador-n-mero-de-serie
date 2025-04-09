@@ -25,19 +25,25 @@ def verificar_login(usuario, senha):
 # TELA DE LOGIN
 # =========================
 def tela_login():
-    st.title("🔒 Login - Centro de Distribuição")
+    if "logado" not in st.session_state:
+        st.session_state.logado = False
 
-    usuario = st.text_input("Usuário")
-    senha = st.text_input("Senha", type="password")
+    if not st.session_state.logado:
+        st.subheader("🔐 Login")
+        usuario = st.text_input("Usuário")
+        senha = st.text_input("Senha", type="password")
 
-    if st.button("Entrar"):
-        if verificar_login(usuario, senha):
-            st.session_state.logado = True
-            st.session_state.usuario = usuario
-            st.success("✅ Login realizado com sucesso!")
-            st.experimental_rerun()
-        else:
-            st.error("❌ Usuário ou senha inválidos")
+        if st.button("Entrar"):
+            if verificar_login(usuario, senha):
+                st.session_state.logado = True
+                st.session_state.usuario = usuario
+                st.success("✅ Login bem-sucedido!")
+                st.experimental_rerun()
+            else:
+                st.error("❌ Usuário ou senha incorretos.")
+    else:
+        st.sidebar.success(f"👤 Usuário: {st.session_state.usuario}")
+
 
 # =========================
 # INICIALIZA ESTADO DE SESSÃO
