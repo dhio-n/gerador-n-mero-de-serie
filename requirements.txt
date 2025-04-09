@@ -2,3 +2,4 @@ streamlit
 fpdf
 python-barcode
 Pillow
+psycopg2-binary
