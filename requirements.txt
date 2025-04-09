@@ -3,3 +3,4 @@ fpdf
 python-barcode
 Pillow
 psycopg2-binary
+python-dotenv
