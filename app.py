@@ -7,7 +7,7 @@ import os
 
 # ⚠️ Removido criar_tabelas(), pois com Supabase você não cria tabelas via app
 # criar_tabelas()  ← Desnecessário com Supabase
-st.write("URL do banco carregada:", os.environ.get("SUPABASE_URL", "Não definida"))
+
 
 # Configuração da página
 st.set_page_config(page_title="Gerador de Números de Série", layout="centered")
