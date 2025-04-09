@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 def conectar():
     return sqlite3.connect("data/produtos.db")
@@ -18,7 +19,7 @@ def criar_tabelas():
         CREATE TABLE IF NOT EXISTS series (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             codigo_produto TEXT,
-            numero_serie TEXT,
+            numero_serie TEXT UNIQUE,
             data_geracao TEXT,
             FOREIGN KEY (codigo_produto) REFERENCES produtos(codigo)
         )
@@ -49,10 +50,28 @@ def salvar_serie(codigo_produto, numero_serie, data_geracao):
     conn.commit()
     conn.close()
 
-def consultar_serie(codigo_produto):
+def consultar_series(codigo_produto, data_inicio=None, data_fim=None, numero_serie=None):
     conn = conectar()
     cursor = conn.cursor()
-    cursor.execute("SELECT numero_serie, data_geracao FROM series WHERE codigo_produto = ?", (codigo_produto,))
-    result = cursor.fetchone()
+
+    query = "SELECT numero_serie, data_geracao FROM series WHERE codigo_produto = ?"
+    params = [codigo_produto]
+
+    if data_inicio:
+        query += " AND data_geracao >= ?"
+        params.append(data_inicio)
+
+    if data_fim:
+        query += " AND data_geracao <= ?"
+        params.append(data_fim)
+
+    if numero_serie:
+        query += " AND numero_serie LIKE ?"
+        params.append(f"%{numero_serie}%")
+
+    query += " ORDER BY data_geracao DESC"
+
+    cursor.execute(query, tuple(params))
+    resultados = cursor.fetchall()
     conn.close()
-    return result
+    return resultados
