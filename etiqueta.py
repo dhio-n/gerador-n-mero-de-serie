@@ -1,4 +1,4 @@
-import FPDF
+
 import os
 import math
 from barcode import Code128
