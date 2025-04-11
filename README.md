@@ -168,5 +168,5 @@ pip install streamlit fpdf python-barcode psycopg2
 
 ## 👨‍💻 Autor
 
-Desenvolvido por **Dhionatan Pereira Barbosa**, como parte do projeto de produção e identificação dos compressores na Mundial Refrigeração focado em **automação e usabilidade**.
+Desenvolvido por **Dhionatan Pereira Barbosa**, como parte do projeto de produção e identificação dos compressores na Mundial Refrigeração focado em **automação e usabilidade**, software solicitado por **Rafael Loredo**, hospedado em https://github.com/dhio-n/gerador-n-mero-de-serie. 
 
