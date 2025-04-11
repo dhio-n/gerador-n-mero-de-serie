@@ -22,7 +22,7 @@ def gerar_codigo_barras(numero_serie):
 
 def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
     tamanho_map = {
-        "Pequena": (70, 40),  # largura x altura
+        "Pequena": (70, 40),
         "Média": (80, 50),
         "Grande": (100, 70)
     }
@@ -59,15 +59,19 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
 
             logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
             if os.path.exists(logo_path):
-                if tamanho == "Grande":
-                    pdf.image(logo_path, x=margem_x, y=y, w=18)
-                else:
-                    pdf.image(logo_path, x=margem_x, y=y, w=14)
+                pdf.image(logo_path, x=margem_x, y=y, w=14)
 
-            pdf.set_xy(margem_x + (20 if tamanho == "Grande" else 16), y)
-            nome_linhas = [nome_produto[i:i+30] for i in range(0, len(nome_produto), 30)] if tamanho == "Grande" else [nome_produto[i:i+22] for i in range(0, len(nome_produto), 22)]
-            for linha in nome_linhas[:2]:
-                pdf.cell(0, 4, linha, ln=True)
+            if tamanho == "Grande":
+                y += 14
+                pdf.set_xy(margem_x, y)
+                nome_linhas = [nome_produto[i:i+36] for i in range(0, len(nome_produto), 36)]
+                for linha in nome_linhas[:2]:
+                    pdf.cell(0, 5, linha, ln=True)
+            else:
+                pdf.set_xy(margem_x + 16, y)
+                nome_linhas = [nome_produto[i:i+22] for i in range(0, len(nome_produto), 22)]
+                for linha in nome_linhas[:2]:
+                    pdf.cell(0, 4, linha, ln=True)
 
             y += 12
             pdf.set_xy(margem_x, y)
@@ -79,9 +83,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
 
             barcode_path = gerar_codigo_barras(numero_serie)
             if os.path.exists(barcode_path):
-                largura_barcode = 60 if tamanho == "Grande" else 50
-                x_barcode = (largura - largura_barcode) / 2
-                pdf.image(barcode_path, x=x_barcode, y=y, w=largura_barcode)
+                pdf.image(barcode_path, x=10, y=y, w=50)
 
         nome_arquivo = os.path.join(PASTA_TEMP, f"etiquetas_lote_{i}.pdf")
         pdf.output(nome_arquivo)
@@ -110,15 +112,19 @@ def reimprimir_etiqueta_individual(produto, numero_serie, tamanho='Pequena'):
 
     logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
     if os.path.exists(logo_path):
-        if tamanho == "Grande":
-            pdf.image(logo_path, x=margem_x, y=y, w=18)
-        else:
-            pdf.image(logo_path, x=margem_x, y=y, w=14)
+        pdf.image(logo_path, x=margem_x, y=y, w=14)
 
-    pdf.set_xy(margem_x + (20 if tamanho == "Grande" else 16), y)
-    nome_linhas = [nome_produto[i:i+30] for i in range(0, len(nome_produto), 30)] if tamanho == "Grande" else [nome_produto[i:i+22] for i in range(0, len(nome_produto), 22)]
-    for linha in nome_linhas[:2]:
-        pdf.cell(0, 4, linha, ln=True)
+    if tamanho == "Grande":
+        y += 14
+        pdf.set_xy(margem_x, y)
+        nome_linhas = [nome_produto[i:i+36] for i in range(0, len(nome_produto), 36)]
+        for linha in nome_linhas[:2]:
+            pdf.cell(0, 5, linha, ln=True)
+    else:
+        pdf.set_xy(margem_x + 16, y)
+        nome_linhas = [nome_produto[i:i+22] for i in range(0, len(nome_produto), 22)]
+        for linha in nome_linhas[:2]:
+            pdf.cell(0, 4, linha, ln=True)
 
     y += 12
     pdf.set_xy(margem_x, y)
@@ -130,9 +136,7 @@ def reimprimir_etiqueta_individual(produto, numero_serie, tamanho='Pequena'):
 
     barcode_path = gerar_codigo_barras(numero_serie)
     if os.path.exists(barcode_path):
-        largura_barcode = 60 if tamanho == "Grande" else 50
-        x_barcode = (largura - largura_barcode) / 2
-        pdf.image(barcode_path, x=x_barcode, y=y, w=largura_barcode)
+        pdf.image(barcode_path, x=10, y=y, w=50)
 
     nome_arquivo = os.path.join(PASTA_TEMP, f"etiqueta_{numero_serie}.pdf")
     pdf.output(nome_arquivo)
