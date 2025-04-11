@@ -10,7 +10,6 @@ from database import buscar_produto
 PASTA_TEMP = "/tmp"
 ORIGEM_LOGO = "LOGO.png"
 DESTINO_LOGO = os.path.join(PASTA_TEMP, "LOGO.png")
-pdf = FPDF('P', 'mm', (70, 40))  # largura x altura
 
 # Garante que a logo seja copiada para a pasta temporária
 if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
@@ -60,10 +59,13 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
 
             logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
             if os.path.exists(logo_path):
-                pdf.image(logo_path, x=margem_x, y=y, w=14)
+                if tamanho == "Grande":
+                    pdf.image(logo_path, x=margem_x, y=y, w=18)
+                else:
+                    pdf.image(logo_path, x=margem_x, y=y, w=14)
 
-            pdf.set_xy(margem_x + 16, y)
-            nome_linhas = [nome_produto[i:i+22] for i in range(0, len(nome_produto), 22)]
+            pdf.set_xy(margem_x + (20 if tamanho == "Grande" else 16), y)
+            nome_linhas = [nome_produto[i:i+30] for i in range(0, len(nome_produto), 30)] if tamanho == "Grande" else [nome_produto[i:i+22] for i in range(0, len(nome_produto), 22)]
             for linha in nome_linhas[:2]:
                 pdf.cell(0, 4, linha, ln=True)
 
@@ -77,7 +79,9 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
 
             barcode_path = gerar_codigo_barras(numero_serie)
             if os.path.exists(barcode_path):
-                pdf.image(barcode_path, x=10, y=y, w=50)
+                largura_barcode = 60 if tamanho == "Grande" else 50
+                x_barcode = (largura - largura_barcode) / 2
+                pdf.image(barcode_path, x=x_barcode, y=y, w=largura_barcode)
 
         nome_arquivo = os.path.join(PASTA_TEMP, f"etiquetas_lote_{i}.pdf")
         pdf.output(nome_arquivo)
@@ -106,10 +110,13 @@ def reimprimir_etiqueta_individual(produto, numero_serie, tamanho='Pequena'):
 
     logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
     if os.path.exists(logo_path):
-        pdf.image(logo_path, x=margem_x, y=y, w=14)
+        if tamanho == "Grande":
+            pdf.image(logo_path, x=margem_x, y=y, w=18)
+        else:
+            pdf.image(logo_path, x=margem_x, y=y, w=14)
 
-    pdf.set_xy(margem_x + 16, y)
-    nome_linhas = [nome_produto[i:i+22] for i in range(0, len(nome_produto), 22)]
+    pdf.set_xy(margem_x + (20 if tamanho == "Grande" else 16), y)
+    nome_linhas = [nome_produto[i:i+30] for i in range(0, len(nome_produto), 30)] if tamanho == "Grande" else [nome_produto[i:i+22] for i in range(0, len(nome_produto), 22)]
     for linha in nome_linhas[:2]:
         pdf.cell(0, 4, linha, ln=True)
 
@@ -123,7 +130,9 @@ def reimprimir_etiqueta_individual(produto, numero_serie, tamanho='Pequena'):
 
     barcode_path = gerar_codigo_barras(numero_serie)
     if os.path.exists(barcode_path):
-        pdf.image(barcode_path, x=10, y=y, w=50)
+        largura_barcode = 60 if tamanho == "Grande" else 50
+        x_barcode = (largura - largura_barcode) / 2
+        pdf.image(barcode_path, x=x_barcode, y=y, w=largura_barcode)
 
     nome_arquivo = os.path.join(PASTA_TEMP, f"etiqueta_{numero_serie}.pdf")
     pdf.output(nome_arquivo)
