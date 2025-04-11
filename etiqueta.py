@@ -1,3 +1,11 @@
+import FPDF
+import os
+import math
+from barcode import Code128
+from barcode.writer import ImageWriter
+from database import buscar_produto
+import shutil
+
 def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
     tamanho_map = {
         "Pequena": (70, 40),  # largura x altura
