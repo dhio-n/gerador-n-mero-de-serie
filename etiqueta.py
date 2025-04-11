@@ -1,10 +1,20 @@
-from fpdf import FPDF
 import os
 import math
+import shutil
+from fpdf import FPDF
 from barcode import Code128
 from barcode.writer import ImageWriter
 from database import buscar_produto
-import shutil
+
+# Defina isso antes de qualquer função
+PASTA_TEMP = "/tmp"
+ORIGEM_LOGO = "LOGO.png"
+DESTINO_LOGO = os.path.join(PASTA_TEMP, "LOGO.png")
+
+# Garante que a logo seja copiada para a pasta temporária
+if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
+    shutil.copyfile(ORIGEM_LOGO, DESTINO_LOGO)
+
 
 def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
     tamanho_map = {
