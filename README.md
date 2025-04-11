@@ -168,5 +168,5 @@ pip install streamlit fpdf python-barcode psycopg2
 
 ## 👨‍💻 Autor
 
-Desenvolvido por **[Seu Nome]**, como parte de um projeto integrador universitário focado em **dados, automação e usabilidade**.
+Desenvolvido por **Dhionatan Pereira Barbosa**, como parte de um projeto integrador universitário focado em **dados, automação e usabilidade**.
 
