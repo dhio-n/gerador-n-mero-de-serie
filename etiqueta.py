@@ -46,7 +46,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
     for i in range(pdf_count):
         pdf = FPDF('P', 'mm', (largura, altura))
         pdf.set_auto_page_break(auto=False)
-        pdf.set_font("Arial", size=8) # Aumentando a fonte base para 'Dupla'
+        pdf.set_font("Arial", size=8) # Fonte base para 'Dupla'
 
         for j in range(etiquetas_por_pagina):
             index = i * etiquetas_por_pagina + j
@@ -86,23 +86,24 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
                 margem_x_2 = 53  # 50mm + 3mm separação
                 y_inicial = 2
 
-                # Não imprimir o nome do produto na opção dupla
-
                 for margem_x in [margem_x_1, margem_x_2]:
                     y = y_inicial  # Resetar Y para cada etiqueta
 
                     logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
                     if os.path.exists(logo_path):
                         pdf.image(logo_path, x=margem_x + 2, y=y + 2, w=8) # Ajustando posição e tamanho da logo
-                        y += 10 # Mais espaço após a logo
+                        y += 6 # Menos espaço após a logo
+
+                    pdf.set_font("Arial", size=6) # Diminuindo a fonte para código e série
+                    pdf.set_xy(margem_x + 2, y)
+                    pdf.cell(48, 4, f"Código: {codigo_produto}", ln=True) # Menor altura da célula
+                    y += 4
 
                     pdf.set_xy(margem_x + 2, y)
-                    pdf.cell(48, 5, f"Código: {codigo_produto}", ln=True)
-                    y += 5
+                    pdf.cell(48, 4, f"Nº Série: {numero_serie}", ln=True) # Menor altura da célula
+                    y += 5 # Menos espaço antes do código de barras
 
-                    pdf.set_xy(margem_x + 2, y)
-                    pdf.cell(48, 5, f"Nº Série: {numero_serie}", ln=True)
-                    y += 7
+                    pdf.set_font("Arial", size=8) # Retorna para a fonte base para outros elementos (se houver no futuro)
 
                     barcode_path = gerar_codigo_barras(numero_serie)
                     if os.path.exists(barcode_path):
@@ -159,7 +160,7 @@ def reimprimir_etiqueta_individual(produto, numero_serie, tamanho='Pequena'):
 
     pdf = FPDF('P', 'mm', (largura, altura))
     pdf.set_auto_page_break(auto=False)
-    pdf.set_font("Arial", size=8) # Aumentando a fonte base para 'Dupla'
+    pdf.set_font("Arial", size=8) # Fonte base para 'Dupla'
     pdf.add_page()
 
     if tamanho == 'Grande':
@@ -192,23 +193,24 @@ def reimprimir_etiqueta_individual(produto, numero_serie, tamanho='Pequena'):
         margem_x_2 = 53  # 50mm + 3mm separação
         y_inicial = 2
 
-        # Não imprimir o nome do produto na opção dupla
-
         for margem_x in [margem_x_1, margem_x_2]:
             y = y_inicial  # Resetar Y para cada etiqueta
 
             logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
             if os.path.exists(logo_path):
                 pdf.image(logo_path, x=margem_x + 2, y=y + 2, w=8) # Ajustando posição e tamanho da logo
-                y += 10 # Mais espaço após a logo
+                y += 6 # Menos espaço após a logo
+
+            pdf.set_font("Arial", size=6) # Diminuindo a fonte para código e série
+            pdf.set_xy(margem_x + 2, y)
+            pdf.cell(48, 4, f"Código: {codigo_produto}", ln=True) # Menor altura da célula
+            y += 4
 
             pdf.set_xy(margem_x + 2, y)
-            pdf.cell(48, 5, f"Código: {codigo_produto}", ln=True)
-            y += 5
+            pdf.cell(48, 4, f"Nº Série: {numero_serie}", ln=True) # Menor altura da célula
+            y += 5 # Menos espaço antes do código de barras
 
-            pdf.set_xy(margem_x + 2, y)
-            pdf.cell(48, 5, f"Nº Série: {numero_serie}", ln=True)
-            y += 7
+            pdf.set_font("Arial", size=8) # Retorna para a fonte base para outros elementos (se houver no futuro)
 
             barcode_path = gerar_codigo_barras(numero_serie)
             if os.path.exists(barcode_path):
