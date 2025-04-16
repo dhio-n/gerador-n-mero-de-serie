@@ -120,7 +120,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
 
                     pdf.set_xy(margem_x + 2, y)
                     pdf.cell(48, 4, f"Nº Série: {numero_serie}", ln=True) # Menor altura da célula
-                    y += 2 # Menos espaço antes do código de barras
+                    y += 4 # Menos espaço antes do código de barras
 
                     pdf.set_font("Arial", size=8) # Retorna para a fonte base para outros elementos (se houver no futuro)
 
