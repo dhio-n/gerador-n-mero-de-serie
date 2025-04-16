@@ -30,7 +30,7 @@ def gerar_codigo_barras(numero_serie, largura_mm=0.7):
     options = {
         "module_width": largura_mm,   # Largura da barra
         "module_height": 25.0,        # Altura da barra
-        "quiet_zone": 6.5,            # Margem lateral
+        "quiet_zone": 2.5,            # Margem lateral
         "write_text": False,          # Oculta texto abaixo
         "dpi": 200,                   # Alta resolução
     }
