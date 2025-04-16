@@ -18,9 +18,11 @@ if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
 
 
 
-def gerar_codigo_barras(numero_serie, largura_mm=0.2): # Adicionando parâmetro para largura
+
+
+def gerar_codigo_barras(numero_serie, largura_mm=0.3): # Adicionando parâmetro para largura
     caminho_base = os.path.join(PASTA_TEMP, f"barcode_{numero_serie}")
-    writer = ImageWriter(options={'module_width': largura_mm}) # Definindo a largura do módulo
+    writer = ImageWriter(module_width=largura_mm) # Passando a opção diretamente como argumento de palavra-chave
     barcode = Code128(numero_serie, writer=writer)
     return barcode.save(caminho_base)
 
