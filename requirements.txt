@@ -5,4 +5,4 @@ Pillow
 psycopg2-binary
 python-dotenv
 bcrypt
-textwrap
+
