@@ -208,33 +208,55 @@ def reimprimir_etiqueta_individual(produto, numero_serie, tamanho='Pequena'):
             pdf.image(barcode_path, x=10, y=y, w=80)
 
     elif tamanho == 'Dupla':
-        margem_x_1 = 0
-        margem_x_2 = 53
-        y_inicial = 2
-
-        for margem_x in [margem_x_1, margem_x_2]:
-            y = y_inicial
-            logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
-            if os.path.exists(logo_path):
-                pdf.image(logo_path, x=margem_x, y=y, w=10)
-
-            y += 10
-            pdf.set_xy(margem_x, y)
-            nome_linhas = [nome_produto[i:i+20] for i in range(0, len(nome_produto), 20)]
-            for linha in nome_linhas[:2]:
-                pdf.cell(50, 3.5, linha, ln=True)
-                y += 3.5
-
-            pdf.set_xy(margem_x, y)
-            pdf.cell(50, 3.5, f"Código: {codigo_produto}", ln=True)
-            y += 3.5
-            pdf.set_xy(margem_x, y)
-            pdf.cell(50, 3.5, f"Série: {numero_serie}", ln=True)
-            y += 4
-
-            barcode_path = gerar_codigo_barras(numero_serie)
-            if os.path.exists(barcode_path):
-                pdf.image(barcode_path, x=margem_x + 4, y=y, w=42)
+                margem_x_1 = 0
+            
+                margem_x_2 = 53  # 50mm + 3mm separação
+            
+                y_inicial = 2
+            
+                # Quebra do nome respeitando palavras (feito fora do loop, para manter igual nas 2 etiquetas)
+            
+                nome_linhas = textwrap.wrap(nome_produto, width=25)  # ajustável conforme fonte e espaço
+            
+                for margem_x in [margem_x_1, margem_x_2]:
+            
+                    y = y_inicial  # Resetar Y para cada etiqueta
+            
+                    logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
+            
+                    if os.path.exists(logo_path):
+            
+                        pdf.image(logo_path, x=margem_x, y=y, w=10)
+            
+                        y += 3  # Espaço abaixo da logo
+            
+                    # Imprime no máximo 2 linhas do nome
+            
+                    for linha in nome_linhas[:2]:
+            
+                        pdf.set_xy(margem_x, y)
+            
+                        pdf.cell(50, 3.5, linha)
+            
+                        y += 3.5
+            
+                    pdf.set_xy(margem_x, y)
+            
+                    pdf.cell(50, 3.5, f"Código: {codigo_produto}")
+            
+                    y += 3.5
+            
+                    pdf.set_xy(margem_x, y)
+            
+                    pdf.cell(50, 3.5, f"Série: {numero_serie}")
+            
+                    y += 4
+            
+                    barcode_path = gerar_codigo_barras(numero_serie)
+            
+                    if os.path.exists(barcode_path):
+            
+                        pdf.image(barcode_path, x=margem_x + 2, y=y, w=45)
 
     else:
         margem_x = 3
