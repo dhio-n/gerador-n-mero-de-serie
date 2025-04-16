@@ -96,65 +96,65 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
                     pdf.image(qr_path, x=10, y=y, w=30)
 
             elif tamanho == 'Dupla':
-        margem_x_1 = 0
-        margem_x_2 = 53
-        y_inicial = 2
-
-        for margem_x in [margem_x_1, margem_x_2]:
-            y = y_inicial
-
-            logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
-            if os.path.exists(logo_path):
-                pdf.image(logo_path, x=margem_x + 2, y=y + 2, w=8)
+                margem_x_1 = 0
+                margem_x_2 = 53
+                y_inicial = 2
+        
+                for margem_x in [margem_x_1, margem_x_2]:
+                    y = y_inicial
+        
+                    logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
+                    if os.path.exists(logo_path):
+                        pdf.image(logo_path, x=margem_x + 2, y=y + 2, w=8)
+                        y += 6
+        
+                    pdf.set_font("Arial", size=8)
+                    pdf.set_xy(margem_x + 2, y)
+                    pdf.cell(48, 4, f"Código: {codigo_produto}", ln=True)
+                    y += 4
+        
+                    pdf.set_xy(margem_x + 2, y)
+                    pdf.cell(48, 4, f"Nº Série: {numero_serie}", ln=True)
+                    y += 5
+        
+                    pdf.set_font("Arial", size=8)
+        
+                    qr_path = gerar_qrcode(numero_serie)
+                    if os.path.exists(qr_path):
+                        qr_altura_max = altura - y - 2
+                        qr_largura = 22
+                        qr_x = margem_x + (50 - qr_largura) / 2
+                        pdf.image(qr_path, x=qr_x, y=y, w=qr_largura, h=qr_altura_max)
+        
+            else:
+                margem_x = 3
+                y = 3
+        
+                logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
+                if os.path.exists(logo_path):
+                    pdf.image(logo_path, x=margem_x, y=y, w=14)
+        
+                pdf.set_xy(margem_x + 16, y)
+                nome_linhas = [nome_produto[i:i+22] for i in range(0, len(nome_produto), 22)]
+                for linha in nome_linhas[:2]:
+                    pdf.cell(0, 4, linha, ln=True)
+        
+                y += 12
+                pdf.set_xy(margem_x, y)
+                pdf.cell(0, 4, f"Código: {codigo_produto}", ln=True)
+                y += 4
+                pdf.set_xy(margem_x, y)
+                pdf.cell(0, 4, f"Nº Série: {numero_serie}", ln=True)
                 y += 6
-
-            pdf.set_font("Arial", size=8)
-            pdf.set_xy(margem_x + 2, y)
-            pdf.cell(48, 4, f"Código: {codigo_produto}", ln=True)
-            y += 4
-
-            pdf.set_xy(margem_x + 2, y)
-            pdf.cell(48, 4, f"Nº Série: {numero_serie}", ln=True)
-            y += 5
-
-            pdf.set_font("Arial", size=8)
-
-            qr_path = gerar_qrcode(numero_serie)
-            if os.path.exists(qr_path):
-                qr_altura_max = altura - y - 2
-                qr_largura = 22
-                qr_x = margem_x + (50 - qr_largura) / 2
-                pdf.image(qr_path, x=qr_x, y=y, w=qr_largura, h=qr_altura_max)
-
-    else:
-        margem_x = 3
-        y = 3
-
-        logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
-        if os.path.exists(logo_path):
-            pdf.image(logo_path, x=margem_x, y=y, w=14)
-
-        pdf.set_xy(margem_x + 16, y)
-        nome_linhas = [nome_produto[i:i+22] for i in range(0, len(nome_produto), 22)]
-        for linha in nome_linhas[:2]:
-            pdf.cell(0, 4, linha, ln=True)
-
-        y += 12
-        pdf.set_xy(margem_x, y)
-        pdf.cell(0, 4, f"Código: {codigo_produto}", ln=True)
-        y += 4
-        pdf.set_xy(margem_x, y)
-        pdf.cell(0, 4, f"Nº Série: {numero_serie}", ln=True)
-        y += 6
-
-        qr_path = gerar_qrcode(numero_serie)
-        if os.path.exists(qr_path):
-            qr_largura = 24
-            qr_x = margem_x + (largura - 2 * margem_x - qr_largura) / 2
-            pdf.image(qr_path, x=qr_x, y=y, w=qr_largura)
-
-    nome_arquivo = os.path.join(PASTA_TEMP, f"etiqueta_{numero_serie}.pdf")
-    pdf.output(nome_arquivo)
+        
+                qr_path = gerar_qrcode(numero_serie)
+                if os.path.exists(qr_path):
+                    qr_largura = 24
+                    qr_x = margem_x + (largura - 2 * margem_x - qr_largura) / 2
+                    pdf.image(qr_path, x=qr_x, y=y, w=qr_largura)
+        
+            nome_arquivo = os.path.join(PASTA_TEMP, f"etiqueta_{numero_serie}.pdf")
+            pdf.output(nome_arquivo)
 
 
     return arquivos_gerados
