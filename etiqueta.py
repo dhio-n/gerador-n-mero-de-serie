@@ -53,7 +53,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
     ]
 
     total_series = len(lista_series)
-    etiquetas_por_pagina = 5 if tamanho != 'Dupla' else 3
+    etiquetas_por_pagina = 5 if tamanho != 'Dupla' else 10
     pdf_count = math.ceil(total_series / etiquetas_por_pagina)
     arquivos_gerados = []
 
