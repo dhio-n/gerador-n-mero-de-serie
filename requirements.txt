@@ -5,4 +5,5 @@ Pillow
 psycopg2-binary
 python-dotenv
 bcrypt
+qrcode
 
