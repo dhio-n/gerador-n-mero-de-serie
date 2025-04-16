@@ -6,6 +6,7 @@ from barcode import Code128
 from barcode.writer import ImageWriter
 from database import buscar_produto
 import textwrap
+import qrcode
 
 # Constantes
 PASTA_TEMP = "/tmp"
@@ -23,9 +24,8 @@ if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
 
 
 
-import qrcode
 
-PASTA_TEMP = "temp"  # Certifique-se de que a pasta exista
+
 
 def gerar_qrcode(numero_serie, tamanho_caixa=10, borda=4):
     os.makedirs(PASTA_TEMP, exist_ok=True)
