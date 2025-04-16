@@ -130,7 +130,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
             
                     if os.path.exists(barcode_path):
             
-                        pdf.image(barcode_path, x=margem_x + 4, y=y, w=40)
+                        pdf.image(barcode_path, x=margem_x + 2, y=y, w=45)
 
 
 
