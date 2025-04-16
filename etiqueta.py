@@ -20,11 +20,12 @@ if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
 
 
 
-def gerar_codigo_barras(numero_serie, largura_mm=0.3): # Adicionando parâmetro para largura
+def gerar_codigo_barras(numero_serie, largura_mm=0.3):
     caminho_base = os.path.join(PASTA_TEMP, f"barcode_{numero_serie}")
-    writer = ImageWriter(module_width=largura_mm) # Passando a opção diretamente como argumento de palavra-chave
+    writer = ImageWriter()
     barcode = Code128(numero_serie, writer=writer)
-    return barcode.save(caminho_base)
+    return barcode.save(caminho_base, options={"module_width": largura_mm})
+
 
 def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
     tamanho_map = {
