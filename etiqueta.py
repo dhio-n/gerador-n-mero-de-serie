@@ -126,14 +126,11 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
             
                     y += 4
             
-                           
-            
-            
                     barcode_path = gerar_codigo_barras(numero_serie)
-                
-                if os.path.exists(barcode_path):
-                
-                    pdf.image(barcode_path, x=margem_x + 4, y=y, w=42)
+            
+                    if os.path.exists(barcode_path):
+            
+                        pdf.image(barcode_path, x=margem_x + 4, y=y, w=42)
 
 
 
