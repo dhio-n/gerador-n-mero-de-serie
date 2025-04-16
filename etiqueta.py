@@ -81,33 +81,33 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
                     pdf.image(barcode_path, x=10, y=y, w=80)
 
             elif tamanho == 'Dupla':
-    margem_x_1 = 0
-    margem_x_2 = 53  # 50mm + 3mm separação
-    y_inicial = 2
+                margem_x_1 = 0
+                margem_x_2 = 53  # 50mm + 3mm separação
+                y_inicial = 2
 
-            for margem_x in [margem_x_1, margem_x_2]:
-                y = y_inicial  # <-- resetar o Y aqui para cada etiqueta
-                logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
-                if os.path.exists(logo_path):
-                    pdf.image(logo_path, x=margem_x, y=y, w=10)
-        
-                y += 3  # espaço abaixo da logo (2mm ajustado)
-                pdf.set_xy(margem_x, y)
-                nome_linhas = [nome_produto[i:i+20] for i in range(0, len(nome_produto), 20)]
-                for linha in nome_linhas[:2]:
-                    pdf.cell(50, 3.5, linha, ln=True)
+                for margem_x in [margem_x_1, margem_x_2]:
+                    y = y_inicial  # <-- resetar o Y aqui para cada etiqueta
+                    logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
+                    if os.path.exists(logo_path):
+                        pdf.image(logo_path, x=margem_x, y=y, w=10)
+            
+                    y += 3  # espaço abaixo da logo (2mm ajustado)
+                    pdf.set_xy(margem_x, y)
+                    nome_linhas = [nome_produto[i:i+20] for i in range(0, len(nome_produto), 20)]
+                    for linha in nome_linhas[:2]:
+                        pdf.cell(50, 3.5, linha, ln=True)
+                        y += 3.5
+            
+                    pdf.set_xy(margem_x, y)
+                    pdf.cell(50, 3.5, f"Código: {codigo_produto}", ln=True)
                     y += 3.5
-        
-                pdf.set_xy(margem_x, y)
-                pdf.cell(50, 3.5, f"Código: {codigo_produto}", ln=True)
-                y += 3.5
-                pdf.set_xy(margem_x, y)
-                pdf.cell(50, 3.5, f"Série: {numero_serie}", ln=True)
-                y += 4
-        
-                barcode_path = gerar_codigo_barras(numero_serie)
-                if os.path.exists(barcode_path):
-                    pdf.image(barcode_path, x=margem_x + 4, y=y, w=42)
+                    pdf.set_xy(margem_x, y)
+                    pdf.cell(50, 3.5, f"Série: {numero_serie}", ln=True)
+                    y += 4
+            
+                    barcode_path = gerar_codigo_barras(numero_serie)
+                    if os.path.exists(barcode_path):
+                        pdf.image(barcode_path, x=margem_x + 4, y=y, w=42)
 
             else:  # Pequena e Média
                 margem_x = 3
