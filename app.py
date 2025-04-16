@@ -159,7 +159,7 @@ def tela_consultar_serie():
 
                 with col2:
                     tamanho_individual = st.selectbox(
-                        "Tamanho", ["Pequena", "Média", "Grande", "Dupla"], index=2, key=f"selectbox_{unique_id}"
+                        "Tamanho", ["Pequena", "Média", "Grande", "Dupla"], index=3, key=f"selectbox_{unique_id}"
                     )
                     if st.button("Reimprimir", key=f"reimprimir_{unique_id}"):
                         st.session_state.reimprimir_serie = (codigo, numero_serie, idx, tamanho_individual)
