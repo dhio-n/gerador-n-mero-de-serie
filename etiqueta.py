@@ -22,7 +22,7 @@ if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
 
 
 
-def gerar_codigo_barras(numero_serie, largura_mm=0.7):
+def gerar_codigo_barras(numero_serie, largura_mm=0.3):
     caminho_base = os.path.join(PASTA_TEMP, f"barcode_{numero_serie}")
     writer = ImageWriter()
     
@@ -108,10 +108,10 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
                 for margem_x in [margem_x_1, margem_x_2]:
                     y = y_inicial  # Resetar Y para cada etiqueta
 
-                    logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
-                    if os.path.exists(logo_path):
-                        pdf.image(logo_path, x=margem_x + 2, y=y + 2, w=8) # Ajustando posição e tamanho da logo
-                        y += 6 # Menos espaço após a logo
+                    #logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
+                    #if os.path.exists(logo_path):
+                        #pdf.image(logo_path, x=margem_x + 2, y=y + 2, w=8) # Ajustando posição e tamanho da logo
+                        #y += 6 # Menos espaço após a logo
 
                     pdf.set_font("Arial", size=6) # Diminuindo a fonte para código e série
                     pdf.set_xy(margem_x + 2, y)
