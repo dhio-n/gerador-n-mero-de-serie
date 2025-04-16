@@ -91,7 +91,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
                     if os.path.exists(logo_path):
                         pdf.image(logo_path, x=margem_x, y=y, w=10)
 
-                    y += 10  # espaço abaixo da logo (ajustado para 2mm entre logo e nome)
+                    y += 5  # espaço abaixo da logo (ajustado para 2mm entre logo e nome)
                     pdf.set_xy(margem_x, y)
                     nome_linhas = [nome_produto[i:i+20] for i in range(0, len(nome_produto), 20)]
                     for linha in nome_linhas[:2]:
