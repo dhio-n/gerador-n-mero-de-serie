@@ -22,7 +22,7 @@ if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
 
 
 
-def gerar_codigo_barras(numero_serie, largura_mm=0.3):
+def gerar_codigo_barras(numero_serie, largura_mm=0.7):
     caminho_base = os.path.join(PASTA_TEMP, f"barcode_{numero_serie}")
     writer = ImageWriter()
     
