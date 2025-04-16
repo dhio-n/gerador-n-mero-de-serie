@@ -98,25 +98,27 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
                         if os.path.exists(logo_path):
                             pdf.image(logo_path, x=margem_x, y=y, w=10)
                 
-                        y += 3  # Espaço abaixo da logo
+                        y += 4  # Espaço maior abaixo da logo
+                        pdf.set_xy(margem_x, y)
                 
                         # Imprime no máximo 2 linhas do nome
                         for linha in nome_linhas[:2]:
                             pdf.set_xy(margem_x, y)
-                            pdf.cell(50, 3.5, linha)
+                            pdf.cell(50, 3.5, linha, ln=True)
                             y += 3.5
                 
                         pdf.set_xy(margem_x, y)
-                        pdf.cell(50, 3.5, f"Código: {codigo_produto}")
+                        pdf.cell(50, 3.5, f"Código: {codigo_produto}", ln=True)
                         y += 3.5
                 
                         pdf.set_xy(margem_x, y)
-                        pdf.cell(50, 3.5, f"Série: {numero_serie}")
+                        pdf.cell(50, 3.5, f"Série: {numero_serie}", ln=True)
                         y += 4
                 
                         barcode_path = gerar_codigo_barras(numero_serie)
                         if os.path.exists(barcode_path):
                             pdf.image(barcode_path, x=margem_x + 4, y=y, w=42)
+
 
 
 
