@@ -22,7 +22,7 @@ if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
 
 
 
-def gerar_codigo_barras(numero_serie, largura_mm=0.6):
+def gerar_codigo_barras(numero_serie, largura_mm=0.7):
     caminho_base = os.path.join(PASTA_TEMP, f"barcode_{numero_serie}")
     writer = ImageWriter()
     
@@ -32,7 +32,7 @@ def gerar_codigo_barras(numero_serie, largura_mm=0.6):
         "module_height": 25.0,        # Altura da barra
         "quiet_zone": 6.5,            # Margem lateral
         "write_text": False,          # Oculta texto abaixo
-        "dpi": 200,                   # Alta resolução
+        "dpi": 300,                   # Alta resolução
     }
 
     barcode = Code128(numero_serie, writer=writer)
