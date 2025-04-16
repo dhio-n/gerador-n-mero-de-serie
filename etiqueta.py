@@ -103,7 +103,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
                 for margem_x in [margem_x_1, margem_x_2]:
                     y = y_inicial
 
-                    pdf.set_font("Arial", size=8)
+                    pdf.set_font("Arial", size=6)
                     pdf.set_xy(margem_x + 2, y)
                     pdf.cell(48, 4, f"Código: {codigo_produto}", ln=True)
                     y += 2
@@ -206,7 +206,7 @@ def reimprimir_etiqueta_individual(produto, numero_serie, tamanho='Pequena'):
                 pdf.image(logo_path, x=margem_x + 2, y=y + 2, w=8)
                 y += 6
 
-            pdf.set_font("Arial", size=8)
+            pdf.set_font("Arial", size=6)
             pdf.set_xy(margem_x + 2, y)
             pdf.cell(48, 4, f"Código: {codigo_produto}", ln=True)
             y += 4
