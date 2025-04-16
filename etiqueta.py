@@ -84,7 +84,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
                 margem_x_1 = 0
                 margem_x_2 = 53  # 50mm + 3mm separação
                 y_inicial = 2
-
+            
                 for margem_x in [margem_x_1, margem_x_2]:
                     y = y_inicial  # <-- resetar o Y aqui para cada etiqueta
                     logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
@@ -93,7 +93,11 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
             
                     y += 3  # espaço abaixo da logo (2mm ajustado)
                     pdf.set_xy(margem_x, y)
+                    
+                    # Ajuste da quebra do nome do produto
                     nome_linhas = [nome_produto[i:i+20] for i in range(0, len(nome_produto), 20)]
+                    
+                    # Imprimir as linhas do nome do produto
                     for linha in nome_linhas[:2]:
                         pdf.cell(50, 3.5, linha, ln=True)
                         y += 3.5
@@ -107,7 +111,9 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
             
                     barcode_path = gerar_codigo_barras(numero_serie)
                     if os.path.exists(barcode_path):
+                        # Colocar o código de barras corretamente
                         pdf.image(barcode_path, x=margem_x + 4, y=y, w=42)
+
 
             else:  # Pequena e Média
                 margem_x = 3
