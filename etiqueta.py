@@ -46,7 +46,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
     for i in range(pdf_count):
         pdf = FPDF('P', 'mm', (largura, altura))
         pdf.set_auto_page_break(auto=False)
-        pdf.set_font("Arial", size=6 if tamanho == 'Dupla' else (10 if tamanho == 'Grande' else 8))
+        pdf.set_font("Arial", size=8) # Aumentando a fonte base para 'Dupla'
 
         for j in range(etiquetas_por_pagina):
             index = i * etiquetas_por_pagina + j
@@ -83,58 +83,36 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
 
             elif tamanho == 'Dupla':
                 margem_x_1 = 0
-
                 margem_x_2 = 53  # 50mm + 3mm separação
-
                 y_inicial = 2
 
-                # Quebra do nome respeitando palavras (feito fora do loop, para manter igual nas 2 etiquetas)
-
-                nome_linhas = textwrap.wrap(nome_produto, width=25)  # ajustável conforme fonte e espaço
+                # Não imprimir o nome do produto na opção dupla
 
                 for margem_x in [margem_x_1, margem_x_2]:
-
                     y = y_inicial  # Resetar Y para cada etiqueta
 
                     logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
-
                     if os.path.exists(logo_path):
+                        pdf.image(logo_path, x=margem_x + 2, y=y + 2, w=8) # Ajustando posição e tamanho da logo
+                        y += 10 # Mais espaço após a logo
 
-                        pdf.image(logo_path, x=margem_x, y=y, w=10)
+                    pdf.set_xy(margem_x + 2, y)
+                    pdf.cell(48, 5, f"Código: {codigo_produto}", ln=True)
+                    y += 5
 
-                        y += 3  # Espaço abaixo da logo
-
-                    # Imprime no máximo 2 linhas do nome
-
-                    for linha in nome_linhas[:2]:
-
-                        pdf.set_xy(margem_x, y)
-
-                        pdf.cell(50, 3.5, linha)
-
-                        y += 3.5
-
-                    pdf.set_xy(margem_x, y)
-
-                    pdf.cell(50, 3.5, f"Código: {codigo_produto}")
-
-                    y += 3.5
-
-                    pdf.set_xy(margem_x, y)
-
-                    pdf.cell(50, 3.5, f"Série: {numero_serie}")
-
-                    y += 4
+                    pdf.set_xy(margem_x + 2, y)
+                    pdf.cell(48, 5, f"Nº Série: {numero_serie}", ln=True)
+                    y += 7
 
                     barcode_path = gerar_codigo_barras(numero_serie)
-
                     if os.path.exists(barcode_path):
-                        # Ajustando a largura e a posição X para ocupar mais espaço
-                        barcode_largura = 50  # Aumentando a largura
-                        barcode_x = margem_x + (51 - barcode_largura) / 2 # Centralizando o código de barras
-                        pdf.image(barcode_path, x=barcode_x, y=y, w=barcode_largura)
+                        # Calculando a altura disponível e usando quase todo o espaço
+                        barcode_altura_max = altura - y - 2 # Margem inferior de 2mm
+                        barcode_largura = 48 # Largura razoável
+                        barcode_x = margem_x + (50 - barcode_largura) / 2
+                        pdf.image(barcode_path, x=barcode_x, y=y, w=barcode_largura, h=barcode_altura_max)
 
-            else:  # Pequena e Média
+            else:
                 margem_x = 3
                 y = 3
 
@@ -157,9 +135,8 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
 
                 barcode_path = gerar_codigo_barras(numero_serie)
                 if os.path.exists(barcode_path):
-                    # Ajustando a largura e a posição X para ocupar mais espaço
-                    barcode_largura = 64 # Aumentando a largura
-                    barcode_x = margem_x + (largura - 2 * margem_x - barcode_largura) / 2 # Centralizando
+                    barcode_largura = 64
+                    barcode_x = margem_x + (largura - 2 * margem_x - barcode_largura) / 2
                     pdf.image(barcode_path, x=barcode_x, y=y, w=barcode_largura)
 
         nome_arquivo = os.path.join(PASTA_TEMP, f"etiquetas_lote_{i}.pdf")
@@ -182,7 +159,7 @@ def reimprimir_etiqueta_individual(produto, numero_serie, tamanho='Pequena'):
 
     pdf = FPDF('P', 'mm', (largura, altura))
     pdf.set_auto_page_break(auto=False)
-    pdf.set_font("Arial", size=6 if tamanho == 'Dupla' else (10 if tamanho == 'Grande' else 8))
+    pdf.set_font("Arial", size=8) # Aumentando a fonte base para 'Dupla'
     pdf.add_page()
 
     if tamanho == 'Grande':
@@ -212,56 +189,34 @@ def reimprimir_etiqueta_individual(produto, numero_serie, tamanho='Pequena'):
 
     elif tamanho == 'Dupla':
         margem_x_1 = 0
-
         margem_x_2 = 53  # 50mm + 3mm separação
-
         y_inicial = 2
 
-        # Quebra do nome respeitando palavras (feito fora do loop, para manter igual nas 2 etiquetas)
-
-        nome_linhas = textwrap.wrap(nome_produto, width=25)  # ajustável conforme fonte e espaço
+        # Não imprimir o nome do produto na opção dupla
 
         for margem_x in [margem_x_1, margem_x_2]:
-
             y = y_inicial  # Resetar Y para cada etiqueta
 
             logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
-
             if os.path.exists(logo_path):
+                pdf.image(logo_path, x=margem_x + 2, y=y + 2, w=8) # Ajustando posição e tamanho da logo
+                y += 10 # Mais espaço após a logo
 
-                pdf.image(logo_path, x=margem_x, y=y, w=10)
+            pdf.set_xy(margem_x + 2, y)
+            pdf.cell(48, 5, f"Código: {codigo_produto}", ln=True)
+            y += 5
 
-                y += 3  # Espaço abaixo da logo
-
-            # Imprime no máximo 2 linhas do nome
-
-            for linha in nome_linhas[:2]:
-
-                pdf.set_xy(margem_x, y)
-
-                pdf.cell(50, 3.5, linha)
-
-                y += 3.5
-
-            pdf.set_xy(margem_x, y)
-
-            pdf.cell(50, 3.5, f"Código: {codigo_produto}")
-
-            y += 3.5
-
-            pdf.set_xy(margem_x, y)
-
-            pdf.cell(50, 3.5, f"Série: {numero_serie}")
-
-            y += 4
+            pdf.set_xy(margem_x + 2, y)
+            pdf.cell(48, 5, f"Nº Série: {numero_serie}", ln=True)
+            y += 7
 
             barcode_path = gerar_codigo_barras(numero_serie)
-
             if os.path.exists(barcode_path):
-                # Ajustando a largura e a posição X para ocupar mais espaço
-                barcode_largura = 48  # Aumentando a largura
-                barcode_x = margem_x + (50 - barcode_largura) / 2 # Centralizando o código de barras
-                pdf.image(barcode_path, x=barcode_x, y=y, w=barcode_largura)
+                # Calculando a altura disponível e usando quase todo o espaço
+                barcode_altura_max = altura - y - 2 # Margem inferior de 2mm
+                barcode_largura = 48 # Largura razoável
+                barcode_x = margem_x + (50 - barcode_largura) / 2
+                pdf.image(barcode_path, x=barcode_x, y=y, w=barcode_largura, h=barcode_altura_max)
 
     else:
         margem_x = 3
@@ -286,9 +241,8 @@ def reimprimir_etiqueta_individual(produto, numero_serie, tamanho='Pequena'):
 
         barcode_path = gerar_codigo_barras(numero_serie)
         if os.path.exists(barcode_path):
-            # Ajustando a largura e a posição X para ocupar mais espaço
-            barcode_largura = 64 # Aumentando a largura
-            barcode_x = margem_x + (largura - 2 * margem_x - barcode_largura) / 2 # Centralizando
+            barcode_largura = 64
+            barcode_x = margem_x + (largura - 2 * margem_x - barcode_largura) / 2
             pdf.image(barcode_path, x=barcode_x, y=y, w=barcode_largura)
 
     nome_arquivo = os.path.join(PASTA_TEMP, f"etiqueta_{numero_serie}.pdf")
