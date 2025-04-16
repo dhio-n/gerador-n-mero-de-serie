@@ -5,6 +5,7 @@ from fpdf import FPDF
 from barcode import Code128
 from barcode.writer import ImageWriter
 from database import buscar_produto
+import textwrap
 
 # Constantes
 PASTA_TEMP = "/tmp"
@@ -80,25 +81,26 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
                 if os.path.exists(barcode_path):
                     pdf.image(barcode_path, x=10, y=y, w=80)
 
-            elif tamanho == 'Dupla':
+            
+
+            elif tamanho == 'Dupla': 
                 margem_x_1 = 0
                 margem_x_2 = 53  # 50mm + 3mm separação
                 y_inicial = 2
             
                 for margem_x in [margem_x_1, margem_x_2]:
-                    y = y_inicial  # <-- resetar o Y aqui para cada etiqueta
+                    y = y_inicial  # Resetar Y para cada etiqueta
                     logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
                     if os.path.exists(logo_path):
                         pdf.image(logo_path, x=margem_x, y=y, w=10)
             
-                    y += 3  # espaço abaixo da logo (2mm ajustado)
+                    y += 3  # Espaço abaixo da logo
                     pdf.set_xy(margem_x, y)
-                    
-                    # Ajuste da quebra do nome do produto
-                    nome_linhas = [nome_produto[i:i+20] for i in range(0, len(nome_produto), 20)]
-                    
-                    # Imprimir as linhas do nome do produto
-                    for linha in nome_linhas[:2]:
+            
+                    # Quebra do nome respeitando palavras
+                    nome_linhas = textwrap.wrap(nome_produto, width=20)
+            
+                    for linha in nome_linhas[:2]:  # No máximo 2 linhas
                         pdf.cell(50, 3.5, linha, ln=True)
                         y += 3.5
             
@@ -111,7 +113,6 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
             
                     barcode_path = gerar_codigo_barras(numero_serie)
                     if os.path.exists(barcode_path):
-                        # Colocar o código de barras corretamente
                         pdf.image(barcode_path, x=margem_x + 4, y=y, w=42)
 
 
