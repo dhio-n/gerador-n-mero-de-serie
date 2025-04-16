@@ -130,8 +130,8 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
 
                     if os.path.exists(barcode_path):
                         # Ajustando a largura e a posição X para ocupar mais espaço
-                        barcode_largura = 48  # Aumentando a largura
-                        barcode_x = margem_x + (50 - barcode_largura) / 2 # Centralizando o código de barras
+                        barcode_largura = 50  # Aumentando a largura
+                        barcode_x = margem_x + (51 - barcode_largura) / 2 # Centralizando o código de barras
                         pdf.image(barcode_path, x=barcode_x, y=y, w=barcode_largura)
 
             else:  # Pequena e Média
