@@ -32,7 +32,7 @@ def gerar_codigo_barras(numero_serie, largura_mm=0.7):
         "module_height": 25.0,        # Altura da barra
         "quiet_zone": 2.5,            # Margem lateral
         "write_text": False,          # Oculta texto abaixo
-        "dpi": 200,                   # Alta resolução
+        "dpi": 300,                   # Alta resolução
     }
 
     barcode = Code128(numero_serie, writer=writer)
@@ -116,11 +116,11 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
                     pdf.set_font("Arial", size=6) # Diminuindo a fonte para código e série
                     pdf.set_xy(margem_x + 2, y)
                     pdf.cell(48, 4, f"Código: {codigo_produto}", ln=True) # Menor altura da célula
-                    y += 4
+                    y += 2
 
                     pdf.set_xy(margem_x + 2, y)
                     pdf.cell(48, 4, f"Nº Série: {numero_serie}", ln=True) # Menor altura da célula
-                    y += 5 # Menos espaço antes do código de barras
+                    y += 2 # Menos espaço antes do código de barras
 
                     pdf.set_font("Arial", size=8) # Retorna para a fonte base para outros elementos (se houver no futuro)
 
