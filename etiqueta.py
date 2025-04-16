@@ -136,9 +136,9 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
                 margem_x = 3
                 y = 3
 
-                logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
-                if os.path.exists(logo_path):
-                    pdf.image(logo_path, x=margem_x, y=y, w=14)
+                #logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
+                #if os.path.exists(logo_path):
+                #    pdf.image(logo_path, x=margem_x, y=y, w=14)
 
                 pdf.set_xy(margem_x + 16, y)
                 nome_linhas = [nome_produto[i:i+22] for i in range(0, len(nome_produto), 22)]
