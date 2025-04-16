@@ -16,9 +16,12 @@ DESTINO_LOGO = os.path.join(PASTA_TEMP, "LOGO.png")
 if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
     shutil.copyfile(ORIGEM_LOGO, DESTINO_LOGO)
 
-def gerar_codigo_barras(numero_serie):
+
+
+def gerar_codigo_barras(numero_serie, largura_mm=0.2): # Adicionando parâmetro para largura
     caminho_base = os.path.join(PASTA_TEMP, f"barcode_{numero_serie}")
-    barcode = Code128(numero_serie, writer=ImageWriter())
+    writer = ImageWriter(options={'module_width': largura_mm}) # Definindo a largura do módulo
+    barcode = Code128(numero_serie, writer=writer)
     return barcode.save(caminho_base)
 
 def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
