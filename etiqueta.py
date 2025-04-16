@@ -22,21 +22,29 @@ if os.path.exists(ORIGEM_LOGO) and not os.path.exists(DESTINO_LOGO):
 
 
 
-def gerar_codigo_barras(numero_serie, largura_mm=0.7):
-    caminho_base = os.path.join(PASTA_TEMP, f"barcode_{numero_serie}")
-    writer = ImageWriter()
-    
-    # Definindo opções de qualidade e legibilidade
-    options = {
-        "module_width": largura_mm,   # Largura da barra
-        "module_height": 25.0,        # Altura da barra
-        "quiet_zone": 2.5,            # Margem lateral
-        "write_text": False,          # Oculta texto abaixo
-        "dpi": 300,                   # Alta resolução
-    }
 
-    barcode = Code128(numero_serie, writer=writer)
-    return barcode.save(caminho_base, options=options)
+import qrcode
+
+PASTA_TEMP = "temp"  # Certifique-se de que a pasta exista
+
+def gerar_qrcode(numero_serie, tamanho_caixa=10, borda=4):
+    os.makedirs(PASTA_TEMP, exist_ok=True)
+    caminho_arquivo = os.path.join(PASTA_TEMP, f"qrcode_{numero_serie}.png")
+
+    qr = qrcode.QRCode(
+        version=None,             # Ajusta automaticamente o tamanho com base no conteúdo
+        error_correction=qrcode.constants.ERROR_CORRECT_M,  # Nível de correção de erro
+        box_size=tamanho_caixa,   # Tamanho de cada quadradinho
+        border=borda              # Borda ao redor do QR Code
+    )
+
+    qr.add_data(numero_serie)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+    img.save(caminho_arquivo)
+
+    return caminho_arquivo
 
 
 
