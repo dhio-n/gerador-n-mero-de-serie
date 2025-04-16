@@ -86,7 +86,7 @@ def tela_gerar_serie():
     st.subheader("Gerar Número de Série")
     codigo = st.text_input("Digite o Código do Produto")
     quantidade = st.number_input("Quantidade de Números de Série", min_value=1, step=1, value=1)
-    tamanho = st.selectbox("Tamanho da Etiqueta", ["Pequena", "Média", "Grande", "Dupla"], index=2)
+    tamanho = st.selectbox("Tamanho da Etiqueta", ["Pequena", "Média", "Grande", "Dupla"], index=3)
 
     if "arquivos_pdf" not in st.session_state:
         st.session_state.arquivos_pdf = []
