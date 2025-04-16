@@ -102,7 +102,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
             
                         pdf.image(logo_path, x=margem_x, y=y, w=10)
             
-                    y += 3  # Espaço abaixo da logo
+                        y += 3  # Espaço abaixo da logo
             
                     # Imprime no máximo 2 linhas do nome
             
@@ -130,7 +130,7 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
             
                     if os.path.exists(barcode_path):
             
-                        pdf.image(barcode_path, x=margem_x + 4, y=y, w=42)
+                        pdf.image(barcode_path, x=margem_x + 4, y=y, w=40)
 
 
 
