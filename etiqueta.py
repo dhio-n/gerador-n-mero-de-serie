@@ -153,8 +153,8 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
                     qr_x = margem_x + (largura - 2 * margem_x - qr_largura) / 2
                     pdf.image(qr_path, x=qr_x, y=y, w=qr_largura)
         
-            nome_arquivo = os.path.join(PASTA_TEMP, f"etiqueta_{numero_serie}.pdf")
-            pdf.output(nome_arquivo)
+            arquivos_gerados = os.path.join(PASTA_TEMP, f"etiqueta_{numero_serie}.pdf")
+            pdf.output(arquivos_gerados)
 
 
     return arquivos_gerados
