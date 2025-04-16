@@ -83,22 +83,22 @@ def gerar_etiqueta_pdf(produto, lista_series, tamanho='Pequena'):
 
             
 
-                elif tamanho == 'Dupla': 
-                    margem_x_1 = 0
-                    margem_x_2 = 53  # 50mm + 3mm separação
+                elif tamanho == 'Dupla':
+                    margem_x_1 = 10  # Adicionando uma margem inicial
+                    margem_x_2 = 10 + 50 + 3 # Margem inicial + largura da etiqueta + separação
                     y_inicial = 2
                 
                     # Quebra do nome respeitando palavras (feito fora do loop, para manter igual nas 2 etiquetas)
-                    nome_linhas = textwrap.wrap(nome_produto, width=25)  # ajustável conforme fonte e espaço
+                    nome_linhas = textwrap.wrap(nome_produto, width=25) # ajustável conforme fonte e espaço
                 
                     for margem_x in [margem_x_1, margem_x_2]:
-                        y = y_inicial  # Resetar Y para cada etiqueta
+                        y = y_inicial # Resetar Y para cada etiqueta
                 
                         logo_path = os.path.join(PASTA_TEMP, "LOGO.png")
                         if os.path.exists(logo_path):
                             pdf.image(logo_path, x=margem_x, y=y, w=10)
                 
-                        y += 4  # Espaço maior abaixo da logo
+                        y += 4 # Espaço maior abaixo da logo
                         pdf.set_xy(margem_x, y)
                 
                         # Imprime no máximo 2 linhas do nome
